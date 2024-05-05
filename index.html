@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Luisa's experiment</title>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-survey-text.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-html-button-response.js"></script>
+    <script src="jspsych/plugin-video-slider-response.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+    <style>
+        .jspsych-display-element {
+            font-size: 24px;
+        }
+    </style>
+</head>
+  <body></body>
+
+  <script>
+    var jsPsych = initJsPsych({
+        on_finish: function() {
+            jsPsych.data.get().localSave('csv','results.csv');
+        },
+        show_progress_bar: true
+    });
+
+    var timeline = [];
+
+    var idInputTrial = {
+            type: jsPsychSurveyText,
+            questions: [
+                {prompt: 'Participant ID:', placeholder: '099', required: true},
+            ],
+            on_finish: function(data) {
+                
+            }
+    };
+    timeline.push(idInputTrial);
+
+    var welcome = {
+        type: jsPsychHtmlButtonResponse,
+            stimulus: `
+            <p>Welcome to the experiment.</p>
+            <p>Something something about the experiment.</p>
+            `,
+            choices:['Continue to instructions'],
+    };
+    timeline.push(welcome);
+
+    var instructions1 = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+        <div style="text-align: left; margin: 3in; margin-bottom: 1in; margin-top: 1in;">
+        <p>You will do something in this experiment.</br>
+        And you will do another thing.</p>
+        <p>After that you will do yet another thing.</br>
+        And then you will do one final thing.</br>
+        These will be all the things you have to do.</br>
+        <p>And this is all.</p>
+        </div>
+        `,
+        choices:['Next'],
+    };
+    timeline.push(instructions1);
+
+    var practice = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+        <div style="text-align: left; margin: 3in; margin-bottom: 1in; margin-top: 1in;">
+        <p>There will be x number of practice trials for you to familiarize yourself with the interface and procedure.</br>
+        Feel free to ask the experimenter if you have any questions.</p>
+        <p>Something is going to happen for the practice trials.<br>
+            This is what is going to happen.<br>
+            Yes, this will happen.</p>
+        </div>
+        `,
+        choices:['Begin practice trials'],
+    };
+    timeline.push(practice);
+
+    var instructions2 = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+        <p>This is all for the practice trials.<br>
+        If you have any questions, feel free to clarify with the experimenter.<br><br>
+        Click "Begin experiment" when you are ready.</p>
+        `,
+        choices:['Begin experiment'],
+    };
+    timeline.push(instructions2);
+
+    var trial = {
+        type: jsPsychVideoSliderResponse,
+        stimulus: [
+            'media/happy3_sync.mp4'
+        ],
+        width: 800,
+        controls: true,
+        slider_start: 5,
+        min: 1,
+        max: 9,
+        step: 0.1,
+        labels: ["meh..", "ooh!"],
+        prompt: '<p>Some questions about this.</p>',
+        };
+
+    timeline.push(trial);
+
+    var end = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+        <p>You've come to the end of the experiment.</p>
+        <p>Thank you for participating.</p>
+        `,
+        choices:['End experiment and upload my data'],
+        on_finish: function(data) {
+            document.body.innerHTML += '<p>Please wait for your data to finish uploading before closing the browser window.</p>';
+        },
+    }
+    timeline.push(end);
+
+    var all_data = jsPsych.data.get();
+    console.log(all_data.csv());
+
+    jsPsych.run(timeline);
+
+  </script>
+</html>
