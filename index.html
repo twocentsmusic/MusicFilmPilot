@@ -314,8 +314,10 @@ var jsPsych = initJsPsych({
         `,
         choices:['End experiment and upload my responses'],
         on_finish: function(data) {
-            document.body.innerHTML += '<p>Please email the csv file of your responses to Luisa. Thank you!</p>';
-        },
+          document.body.innerHTML += '<p>Please email the csv file of your responses to<br>' +
+              '<a href="mailto:ldumas16804@upei.ca">ldumas16804@upei.ca</a> or ' +
+              '<a href="mailto:lheng@upei.ca">lheng@upei.ca</a>. Thank you!</p>';
+      },
     }
     timeline.push(end2);
 
